@@ -183,7 +183,8 @@ function render() {
   document.getElementById("results").innerHTML = pageItems.map(item => {
     const author = item.author || "";
     const titleLine = `${item.title || "Untitled"}${author ? " - " + author : ""}`;
-    const meta = [item.genre || item.type || "—", item.cast || "", item.year || ""].filter(Boolean).join(" - ");
+    const castLabel = item.cast ? `Cast (${item.cast})` : "";
+    const meta = [item.genre || item.type || "—", castLabel, item.year || ""].filter(Boolean).join(" - ");
     return `<div class="card"><div class="title-line">${titleLine}${item.url ? `<a class="glyph-link" href="${item.url}" target="_blank" rel="noopener" title="Open on Concord">🔗</a>` : ""}</div><div class="meta">${meta}</div></div>`;
   }).join("") || `<div class="card">No matches</div>`;
   const pager = document.getElementById("pager");
