@@ -152,8 +152,9 @@ function matches(item, q) {
     if (!y) {
       if (!hasUnknown) return false;
     } else {
+      if (decades.length === 0) return false;
       const decade = Math.floor(y / 10) * 10;
-      if (decades.length && !decades.includes(decade)) return false;
+      if (!decades.includes(decade)) return false;
     }
   }
   const iconic = getChecked(".filter-iconic");
