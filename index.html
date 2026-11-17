@@ -64,8 +64,8 @@
     <label><input type="checkbox" class="filter-year" value="2000-2014"> 2000–2014</label>
     <label><input type="checkbox" class="filter-year" value="2015"> 2015+</label>
     <label><input type="checkbox" class="filter-year" value="unknown"> No year listed</label>
-    <h3 style="margin-top:1rem">Awards</h3>
-    <label><input type="checkbox" class="filter-award" value="any"> Any award / recognition</label>
+    <h3 style="margin-top:1rem">Iconic</h3>
+    <label><input type="checkbox" class="filter-iconic" value="yes"> Famous / classic plays</label>
   </aside>
   <main class="main">
     <div class="filters">
@@ -86,6 +86,15 @@
   </main>
 </div>
 <script>
+const ICONIC = new Set([
+  "A Streetcar Named Desire","The Glass Menagerie","Cat on a Hot Tin Roof","A Raisin in the Sun",
+  "Waiting for Godot","Who's Afraid of Virginia Woolf?","Our Town","Arcadia","Noises Off",
+  "Barefoot in the Park","The Odd Couple","August Wilson's Fences","Rosencrantz and Guildenstern Are Dead",
+  "The Real Thing","Betrayal","The Birthday Party","The Caretaker","The Homecoming",
+  "Endgame","Krapp's Last Tape","Happy Days","The Zoo Story",
+  "A Doll's House (Hampton, trans.)","Hedda Gabler (Hampton)","The Cherry Orchard (Frayn)",
+  "Uncle Vanya (Frayn)","The Seagull (Frayn)","The Importance of Being Earnest (Original 4 Act Version)"
+]);
 let DATA = [];
 let currentPage = 1;
 const PAGE_SIZE = 80;
@@ -146,8 +155,8 @@ function matches(item, q) {
       if (!ok && ranges.length) return false;
     }
   }
-  const awards = getChecked(".filter-award");
-  if (awards.includes("any") && !(item.awards && item.awards.length)) return false;
+  const iconic = getChecked(".filter-iconic");
+  if (iconic.includes("yes") && !ICONIC.has(item.title)) return false;
   return true;
 }
 function sortItems(items, mode) {
@@ -211,13 +220,13 @@ function render() {
 }
 document.getElementById("q").addEventListener("input", () => { currentPage = 1; render(); });
 document.getElementById("sort").addEventListener("change", () => { currentPage = 1; render(); });
-document.querySelectorAll(".filter-type, .filter-cast, .filter-year, .filter-award").forEach(el => {
+document.querySelectorAll(".filter-type, .filter-cast, .filter-year, .filter-iconic").forEach(el => {
   el.addEventListener("change", () => { currentPage = 1; render(); });
 });
 document.getElementById("clear").addEventListener("click", () => {
   document.getElementById("q").value = "";
   document.getElementById("sort").value = "title";
-  document.querySelectorAll(".filter-type, .filter-cast, .filter-year, .filter-award").forEach(el => el.checked = false);
+  document.querySelectorAll(".filter-type, .filter-cast, .filter-year, .filter-iconic").forEach(el => el.checked = false);
   document.querySelectorAll(".filter-type").forEach(el => el.checked = true);
   activeLetter = "";
   document.querySelectorAll("#alpha button").forEach(x => x.classList.remove("active"));
