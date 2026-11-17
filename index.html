@@ -181,11 +181,30 @@ function render() {
   const pageItems = filtered.slice(start, start + PAGE_SIZE);
   document.getElementById("stats").textContent = `${total.toLocaleString()} titles · page ${currentPage} of ${pages}`;
   document.getElementById("results").innerHTML = pageItems.map(item => {
+    const title = item.title || "Untitled";
     const author = item.author || "";
-    const titleLine = `${item.title || "Untitled"}${author ? " - " + author : ""}`;
-    const castLabel = item.cast ? `Cast (${item.cast})` : "";
-    const meta = [item.genre || item.type || "—", castLabel, item.year || ""].filter(Boolean).join(" - ");
-    return `<div class="card"><div class="title-line">${titleLine}${item.url ? `<a class="glyph-link" href="${item.url}" target="_blank" rel="noopener" title="Open on Concord">🔗</a>` : ""}</div><div class="meta">${meta}</div></div>`;
+    const genre = item.genre || "";
+    const type = item.type || "";
+    const women = item.women || "";
+    const men = item.men || "";
+    const year = item.year || "";
+    let castStr = "";
+    if (women || men) {
+      const parts = [];
+      if (women) parts.push(`Women ${women}`);
+      if (men) parts.push(`Men ${men}`);
+      castStr = `Cast: ${parts.join(", ")}`;
+    } else if (item.cast) {
+      castStr = `Cast: ${item.cast}`;
+    }
+    const metaParts = [];
+    if (author) metaParts.push(`Author: ${author}`);
+    if (genre) metaParts.push(`Genre: ${genre}`);
+    if (type) metaParts.push(type);
+    if (castStr) metaParts.push(castStr);
+    if (year) metaParts.push(year);
+    const meta = metaParts.join(" - ");
+    return `<div class="card"><div class="title-line">${title}${item.url ? ` <a class="glyph-link" href="${item.url}" target="_blank" rel="noopener" title="Open on Concord">🔗</a>` : ""}</div><div class="meta">${meta}</div></div>`;
   }).join("") || `<div class="card">No matches</div>`;
   const pager = document.getElementById("pager");
   pager.innerHTML = `<button ${currentPage <= 1 ? "disabled" : ""} onclick="currentPage--; render()">← Prev</button><span>${currentPage} / ${pages}</span><button ${currentPage >= pages ? "disabled" : ""} onclick="currentPage++; render()">Next →</button>`;
